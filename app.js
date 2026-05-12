@@ -23,13 +23,18 @@ if (savedTasks) {
 
 
 //Reconstruir Intergfaz
-tasks.forEach((task) => {
-        renderTask(task)    
-});
+renderTasks(tasks)
 
 //Esuchar click
 
 buttonAgregar.addEventListener("click", agregarTarea)
+
+
+
+function saveTasks () {
+    localStorage.setItem("tasks", JSON.stringify(tasks))
+}
+
 
 
 //Funcion para agregar tarea
@@ -54,10 +59,10 @@ function agregarTarea () {
     //Actualizar estado
     tasks.push(newTask)
     //Guardar en el localStorage
-    localStorage.setItem("tasks", JSON.stringify(tasks))
+    saveTasks()
 
     //Renderizar visualmente
-    renderTask(newTask)
+    renderTasks(tasks)
     //Limpiar el input
     input.value = ""
     
@@ -88,22 +93,18 @@ function renderTask (task) {
             return currentTask.id !== task.id
         })
 
-        localStorage.setItem("tasks", JSON.stringify(tasks))
+        saveTasks()
 
-        li.remove()
+        renderTasks(tasks)
     })
     //Toggle done
     li.addEventListener("click",()=> {
 
     task.completed = !task.completed
-
-    if (task.completed) { 
-        li.classList.add("done")
-    } else {
-        li.classList.remove("done")
-    }
+     
+    saveTasks()
     
-    localStorage.setItem("tasks", JSON.stringify(tasks))
+    renderTasks(tasks)
     })
 
     //Estructura del LI
@@ -120,3 +121,11 @@ input.addEventListener("keydown", (event) => {
 })
 
 
+function renderTasks(taskArray) {
+    lista.innerHTML = ""
+
+    taskArray.forEach((task) => {
+    renderTask(task)
+
+})
+}
